@@ -1,8 +1,28 @@
-version: '3'
 services:
-  app:
-    image: python:3.9
-    container_name: app-staging
-    command: python -m http.server 80
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab
+    restart: always
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://192.168.186.130'
+        gitlab_rails['initial_root_password'] = 'toor'
     ports:
-      - "8080:80"
+      - '80:80'
+      - '443:443'
+      - '2222:22'
+    volumes:
+      - './config/gitlab:/etc/gitlab'
+      - './data/gitlab:/var/opt/gitlab'
+      - './logs/gitlab:/var/log/gitlab'
+
+  gitlab-runner:
+    image: 'gitlab/gitlab-runner:latest'
+    container_name: gitlab-runner
+    restart: always
+    depends_on:
+      - gitlab
+    privileged: true
+    volumes:
+      - './config/gitlab-runner:/etc/gitlab-runner'
+      - '/var/run/docker.sock:/var/run/docker.sock'
