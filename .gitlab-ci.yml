@@ -1,0 +1,50 @@
+stages:
+  - build
+  - test
+  - lint
+  - deploy
+  - notify
+
+build:
+  stage: build
+  tags:
+    - devops-test
+  script:
+    - echo "Сборка приложения..."
+
+test:
+  stage: test
+  tags:
+    - devops-test
+  script:
+    - echo "Запуск тестов..."
+    - python -m unittest discover app/tests
+
+lint:
+  stage: lint
+  tags:
+    - devops-test
+  image: python:3.9
+  script:
+    - pip install flake8
+    - flake8 app/
+
+deploy_staging:
+  stage: deploy
+  tags:
+    - devops-test
+  image: python:3.9  # или любой другой образ, где можно установить docker-compose
+  script:
+    - apt-get update && apt-get install -y docker-compose
+    - echo "Деплой приложения на staging через Docker (через docker.sock)..."
+    - docker-compose up -d
+  only:
+    - main
+
+notify:
+  stage: notify
+  tags:
+    - devops-test
+  script:
+    - echo "Отправка уведомления о результате пайплайна..."
+  when: always
