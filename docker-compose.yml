@@ -1,8 +1,8 @@
 services:
   app:
-    image: your_app_image:latest  # Здесь можно указать образ вашего приложения или задать сборку
+    image: your_app_image:latest
     container_name: app-staging
     environment:
       - ENV=staging
     ports:
-      - "8080:80"  # Пробрасываем порт контейнера в staging (напр., 8080 на хосте)
+      - "8080:80"
