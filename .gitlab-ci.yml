@@ -33,9 +33,11 @@ deploy_staging:
   stage: deploy
   tags:
     - devops-test
-  image: python:3.9  # или любой другой образ, где можно установить docker-compose
+  image: python:3.9
   script:
     - apt-get update && apt-get install -y docker-compose
+    - echo "Остановка предыдущих контейнеров (если есть)..."
+    - docker-compose down
     - echo "Деплой приложения на staging через Docker (через docker.sock)..."
     - docker-compose up -d
   only:
