@@ -37,7 +37,7 @@ deploy_staging:
   script:
     - apt-get update && apt-get install -y docker-compose
     - echo "Остановка предыдущих контейнеров (если есть)..."
-    - docker-compose down
+    - docker rm -f app-staging || true
     - echo "Деплой приложения на staging через Docker (через docker.sock)..."
     - docker-compose up -d
   only:
